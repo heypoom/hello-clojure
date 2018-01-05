@@ -25,15 +25,24 @@
   {:name (clojure.string/replace (:name part) #"^left-" "right-")
    :size (:size part)})
 
-(defn symmetrize-body-parts
-  "Expects a seq of maps that have a :name and :size"
-  [asym-body-parts]
-  (loop [remaining-asym-parts asym-body-parts final-body-parts []]
-    (if (empty? remaining-asym-parts)
-        final-body-parts
-      (let [[part & remaining] remaining-asym-parts]
-        (recur remaining
-          (into final-body-parts
-            (set [part (matching-part part)])))))))
+(defn symmetrize-body-parts [asym-parts]
+  (reduce
+    (fn [final-parts part]
+      (into final-parts
+        (set [part (matching-part part)])))
+    []
+    asym-parts))
+
+; (defn symmetrize-body-parts
+;   "Expects a seq of maps that have a :name and :size"
+;   [asym-body-parts]
+;   (loop [remaining-asym-parts asym-body-parts
+;          final-body-parts []]
+;     (if (empty? remaining-asym-parts)
+;         final-body-parts
+;       (let [[part & remaining] remaining-asym-parts]
+;         (recur remaining
+;           (into final-body-parts
+;             (set [part (matching-part part)])))))))
 
 (symmetrize-body-parts hobbit-parts)
